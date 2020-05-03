@@ -1,0 +1,3 @@
+create a script for the Bank Database
+
+see if we need to provide additional DBs for other databases in the exercises

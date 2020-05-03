@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?><!-- Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is JAX-WS RI 2.1.3.1-hudson-417-SNAPSHOT. --><xs:schema xmlns:tns="http://blackjack.java.deitel.com/" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0" targetNamespace="http://blackjack.java.deitel.com/">
+
+<xs:element name="dealCard" type="tns:dealCard"></xs:element>
+
+<xs:element name="dealCardResponse" type="tns:dealCardResponse"></xs:element>
+
+<xs:element name="getHandValue" type="tns:getHandValue"></xs:element>
+
+<xs:element name="getHandValueResponse" type="tns:getHandValueResponse"></xs:element>
+
+<xs:element name="shuffle" type="tns:shuffle"></xs:element>
+
+<xs:element name="shuffleResponse" type="tns:shuffleResponse"></xs:element>
+
+<xs:complexType name="dealCard">
+<xs:sequence></xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="dealCardResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:string" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="shuffle">
+<xs:sequence></xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="shuffleResponse">
+<xs:sequence></xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getHandValue">
+<xs:sequence>
+<xs:element name="hand" type="xs:string" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getHandValueResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:int"></xs:element>
+</xs:sequence>
+</xs:complexType>
+</xs:schema>

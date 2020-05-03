@@ -1,0 +1,6 @@
+
+class Produto {
+
+	String nomeProduto;
+	
+}
