@@ -33,12 +33,9 @@ public class Day3IntroToConditionalStatements {
 		return odd % 2 == 1;
 	}
 	
-	
 	public static boolean isEven(int odd) {
 		return odd % 2 == 0;
 	}
-	
-	
 	
 	public static boolean isRange2To5(int num) {
 		return (num >=2 && num <=5);
