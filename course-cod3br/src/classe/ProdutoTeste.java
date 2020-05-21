@@ -9,7 +9,7 @@ public class ProdutoTeste {
 		var produto2 = new Produto();
 		produto2.nome = "Apple Watch";
 		produto2.preco = 1000.00;
-		produto2.desconto = 0.25;
+		Produto.desconto = 0.25;
 		double precoFinal2 = produto2.precoComDesconto(0.1); 
 		
 		System.out.println("Produto 1:" + produto.nome);
