@@ -1,4 +1,4 @@
-package fundamentos;
+package fundamentos.inferencia;
 
 public class Inferencia {
 	

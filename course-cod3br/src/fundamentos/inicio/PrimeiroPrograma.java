@@ -1,4 +1,4 @@
-package fundamentos;
+package fundamentos.inicio;
 
 /**
  * Essa classe representa...

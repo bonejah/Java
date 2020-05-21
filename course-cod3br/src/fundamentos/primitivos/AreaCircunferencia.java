@@ -1,4 +1,4 @@
-package fundamentos;
+package fundamentos.primitivos;
 
 public class AreaCircunferencia {
 
