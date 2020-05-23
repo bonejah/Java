@@ -30,7 +30,7 @@ class Result1 {
 
 		List<Integer> lsBus = new LinkedList<Integer>();
 		List<Integer> lsK = new LinkedList<Integer>();
-
+		
 		int indexLastPerson = persons.size() - 1;
 
 		for (int timeArriveBus : queries) {
