@@ -33,6 +33,7 @@ public class DesafioCalculadora {
 		System.out.printf("%.2f %s %.2f = %.2f", num1, operacao, num2, resultado);
 	}
 
+	@SuppressWarnings("unused")
 	private static void calculadoraComIf() {
 		Scanner teclado = new Scanner(System.in);
 
