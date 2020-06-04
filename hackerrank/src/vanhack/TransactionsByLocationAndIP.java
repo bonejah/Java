@@ -49,36 +49,30 @@ class Result {
 		List<Transaction> transactions = new ArrayList<Transaction>();
 		BigDecimal sum = new BigDecimal(BigInteger.ZERO);
 
-		sb = retrieveDataInitial(url, connection, reader, userId, inputLine, sb);
+		sb = getDataInitial(url, connection, reader, userId, inputLine, sb);
 
 		try {
-			Gson gson = new GsonBuilder().registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
-				@Override
-				public Date deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
-						throws JsonParseException {
-					return json == null ? null : new Date(json.getAsLong());
-				}
-			}).create();
+			Gson gson = createGson();
 
 			Result result = gson.fromJson(sb.toString(), Result.class);
 
 			if (result.getData() == null && result.getData().isEmpty()) {
 				return 0;
 			} else {
-				getTransactions(result, transactions);
+				getTransactionsFromGson(result, transactions);
 
 				Integer pageActual = Integer.parseInt(result.getPage());
 				Integer total_pages = result.getTotal_pages();
 
 				if (pageActual < total_pages) {
-					retrievePaginateData(
+					getDataPaginate(
 							url, connection, reader, 
 							inputLine, sb, result, 
 							userId, transactions, gson,
 							pageActual, total_pages);
 				}
 
-				sum = retrieveTransactionsByLocationId(locationId, netStart, netEnd, transactions, sum);
+				sum = getSumtAllTransactionsOnRange(locationId, netStart, netEnd, transactions, sum);
 			}
 		} catch (Exception e) {
 			System.err.println("Error: " + e.getMessage());
@@ -87,22 +81,42 @@ class Result {
 		return sum.setScale(0, RoundingMode.HALF_EVEN).intValue();
 	}
 
-	private static BigDecimal retrieveTransactionsByLocationId(int locationId, int netStart, int netEnd,
-			List<Transaction> transactions, BigDecimal sum) {
+	private static Gson createGson() {
+		Gson gson = new GsonBuilder().registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
+			@Override
+			public Date deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+					throws JsonParseException {
+				return json == null ? null : new Date(json.getAsLong());
+			}
+		}).create();
+		
+		return gson;
+	}
+
+	private static BigDecimal getSumtAllTransactionsOnRange(
+			int locationId, 
+			int netStart, 
+			int netEnd,
+			List<Transaction> transactions, 
+			BigDecimal sum) {
 
 		for (Transaction transaction : transactions) {
 			if (transaction.getLocation().getId() == locationId) {
-				sum = verifyRangeIP(netStart, netEnd, sum, transaction);
+				sum = getSumTransactionOnRange(netStart, netEnd, sum, transaction);
 			}
 		}
 
 		return sum;
 	}
 
-	private static BigDecimal verifyRangeIP(int netStart, int netEnd, BigDecimal sum, Transaction transaction) {
-		Integer firstByte = new Integer(transaction.getIp().substring(0, transaction.getIp().indexOf(".")));
+	private static BigDecimal getSumTransactionOnRange(
+			int netStart, 
+			int netEnd, 
+			BigDecimal sum, 
+			Transaction transaction) {
+		Integer firstByteIp = new Integer(transaction.getIp().substring(0, transaction.getIp().indexOf(".")));
 
-		if (firstByte >= netStart && firstByte <= netEnd) {
+		if (firstByteIp >= netStart && firstByteIp <= netEnd) {
 			System.out.println("Amount value in string:" + transaction.getAmount());
 			BigDecimal valueBd = new BigDecimal(transaction.getAmount().replace("$", "").replace(",", ""));
 			System.out.println("Value BigDecimal: " + valueBd);
@@ -114,10 +128,19 @@ class Result {
 		return sum;
 	}
 
-	private static void retrievePaginateData(
-			URL url, URLConnection connection, BufferedReader reader, String inputLine,
-			StringBuilder sb, Result result, int userId, List<Transaction> transactions, 
-			Gson gson, Integer pageActual, Integer total_pages) throws IOException {
+	private static void getDataPaginate(
+			URL url, 
+			URLConnection connection, 
+			BufferedReader reader, 
+			String inputLine,
+			StringBuilder sb, 
+			Result result, 
+			int userId, 
+			List<Transaction> transactions, 
+			Gson gson, 
+			Integer pageActual, 
+			Integer total_pages) throws IOException {
+		
 		for (int page = pageActual + 1; page <= total_pages; page++) {
 			sb = new StringBuilder();
 			try {
@@ -131,7 +154,7 @@ class Result {
 
 				result = gson.fromJson(sb.toString(), Result.class);
 
-				getTransactions(result, transactions);
+				getTransactionsFromGson(result, transactions);
 
 				reader.close();
 			} catch (MalformedURLException e) {
@@ -140,15 +163,20 @@ class Result {
 		}
 	}
 
-	private static void getTransactions(Result result, List<Transaction> transactions) {
+	private static void getTransactionsFromGson(Result result, List<Transaction> transactions) {
 		for (Transaction transaction : result.getData()) {
 			transactions.add(transaction);
 		}
 	}
 
-	private static StringBuilder retrieveDataInitial(
-			URL url, URLConnection connection, BufferedReader reader,
-			int userId, String inputLine, StringBuilder sb) {
+	private static StringBuilder getDataInitial(
+			URL url, 
+			URLConnection connection, 
+			BufferedReader reader,
+			int userId, 
+			String inputLine, 
+			StringBuilder sb) {
+		
 		try {
 			url = new URL(URL_WITH_USER_ID + userId);
 			connection = url.openConnection();
@@ -168,9 +196,7 @@ class Result {
 		return sb;
 	}
 
-	public Result() {
-
-	}
+	public Result() { }
 
 	public Result(String page, Integer per_page, Integer total, Integer total_pages, List<Transaction> data) {
 		this.page = page;
@@ -239,12 +265,10 @@ class Transaction {
 	private Location location;
 	private String ip;
 
-	public Transaction() {
-	}
+	public Transaction() { }
 
 	public Transaction(Integer id, Integer userId, String userName, String txnType, Date timestamp, String amount,
 			Location location, String ip) {
-		super();
 		this.id = id;
 		this.userId = userId;
 		this.userName = userName;
@@ -339,11 +363,9 @@ class Location {
 	private String city;
 	private Integer zipCode;
 
-	public Location() {
-	}
+	public Location() {	}
 
 	public Location(Integer id, String address, String city, Integer zipCode) {
-		super();
 		this.id = id;
 		this.address = address;
 		this.city = city;
