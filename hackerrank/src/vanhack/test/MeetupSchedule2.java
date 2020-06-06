@@ -75,9 +75,6 @@ class CountMeetings2 {
 			}
 		}
 
-//		System.out.println("Total investidores aux: " + investidoresAuxs.size());
-//		System.out.println("Total investidores DEPOIS: " + investidores.size());
-
 		for (int i = 0; i < investidores.size(); i++) {
 			Investor2 investidor = investidores.get(i);
 
@@ -115,34 +112,11 @@ class CountMeetings2 {
 		});
 	}
 
-	public static boolean diaInicialJaOcupadoNaAgenda(Set<Integer> agenda, Investor2 investidor) {
-		// boolean diaInicialJaOcupadoNaAgenda = false;
-
-		// for (Integer dia : agenda) {
-		// if (dia.equals(investidor.getBeginDay())) {
-		// diaInicialJaOcupadoNaAgenda = true;
-		// break;
-		// }
-		// }
-
-		// return diaInicialJaOcupadoNaAgenda;
-
+	private static boolean diaInicialJaOcupadoNaAgenda(Set<Integer> agenda, Investor2 investidor) {
 		return agenda.contains(investidor.getBeginDay());
-
 	}
 
-	public static boolean diaFinalJaOcupadoNaAgenda(Set<Integer> agenda, Investor2 investidor) {
-		// boolean diaFinalJaOcupadoNaAgenda = false;
-
-		// for (Integer dia : agenda) {
-		// if (dia.equals(investidor.getEndDay())) {
-		// diaFinalJaOcupadoNaAgenda = true;
-		// break;
-		// }
-		// }
-
-		// return diaFinalJaOcupadoNaAgenda;
-
+	private static boolean diaFinalJaOcupadoNaAgenda(Set<Integer> agenda, Investor2 investidor) {
 		return agenda.contains(investidor.getEndDay());
 	}
 

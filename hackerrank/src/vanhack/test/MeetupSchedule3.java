@@ -1,16 +1,11 @@
 package vanhack.test;
 
-import static java.util.stream.Collectors.toList;
-
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Hashtable;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.IntStream;
 
 class CountMeetings3 {
 
@@ -22,66 +17,47 @@ class CountMeetings3 {
 	 */
 
 	public static int countMeetings(List<Integer> firstDay, List<Integer> lastDay) {
-        int sizeFirstDay = firstDay.size();
-        int sizeLastDay = lastDay.size();
+		List<Investor3> list = new ArrayList<>(); // create a List of Interval
+		
+		for (int i = 0; i < firstDay.size(); i++) {
+			list.add(new Investor3(firstDay.get(i), firstDay.get(i) + lastDay.get(i)));
+		}
+		
+		list.sort(Comparator.comparingInt(Investor3::getEndDay)); // sort by finish times ascending
 
-        if (sizeFirstDay != sizeLastDay) {
-            return 0;
-        }
+		int res = 0;
+		int prevEnd = Integer.MIN_VALUE; // finish time of the previous meeting
 
-        // Constraint: 1 <= n <= 100000
-        if (sizeFirstDay <= 1 && 100000 >= sizeFirstDay) {
-            return 0;
-        }
+		for (Investor3 i : list) {
+			if (i.getBeginDay() >= prevEnd) { // is there a conflict with the previous meeting?
+				res++;
+				prevEnd = i.getEndDay(); // update the previous finish time
+			}
+		}
+		return res;
+	}
 
-        // Constraint: 1 <= n <= 100000
-        if (sizeLastDay <= 1 && 100000 >= sizeLastDay) {
-            return 0;
-        }
+	private static void sortListInvestidoresByDiaInicial(List<Investor3> investidores) {
+		Collections.sort(investidores, new Comparator<Investor3>() {
+			@Override
+			public int compare(Investor3 o1, Investor3 o2) {
+				Integer beginDay1 = o1.getBeginDay();
+				Integer beginDay2 = o2.getBeginDay();
+				return beginDay1.compareTo(beginDay2);
+			}
+		});
+	}
 
-        // Constraint: 1 <= firstDay[i], lastDay[i] <= 100000 (where 0 <= i < n)
-        // Constraint: firstDay[i] <= lastDay[i] (where 0 <= i < n)
-
-        List<Investor3> investors = new ArrayList<Investor3>();
-        for (int i = 0; i < sizeFirstDay; i++) {
-            Integer fDay = firstDay.get(i);
-            Integer lDay = lastDay.get(i);
-
-            if ((fDay >= 1) && (100000 >= lDay) && (lDay >= fDay)) {
-                investors.add(new Investor3(fDay, lDay));
-            }
-        }
-
-        Map<Integer, Investor3> schedules = new Hashtable<Integer, Investor3>();
-        List<Investor3> schedulesAux = new ArrayList<Investor3>();
-        
-        if (investors.size() > 0) {
-            for (Investor3 investor : investors) {
-                int beginDay = investor.getBeginDay();
-                int endDay = investor.getEndDay();
-
-                if (beginDay == endDay) {
-                    schedules.put(beginDay, investor);
-                } else {
-                    schedulesAux.add(investor);
-                }
-            }
-
-            for (Investor3 investor : schedulesAux) {
-                int beginDay = investor.getBeginDay();
-                int endDay = investor.getEndDay();
-
-                if (!schedules.containsKey(beginDay)) {
-                    schedules.put(beginDay, investor);
-                } else if (!schedules.containsKey(endDay)) {
-                    schedules.put(endDay, investor);
-                }
-            }
-
-        }
-
-        return schedules.size();
-    }
+	private static void sortListInvestidoresByDiaFinal(List<Investor3> investidores) {
+		Collections.sort(investidores, new Comparator<Investor3>() {
+			@Override
+			public int compare(Investor3 o1, Investor3 o2) {
+				Integer endDay1 = o1.getEndDay();
+				Integer endDay2 = o2.getEndDay();
+				return endDay1.compareTo(endDay2);
+			}
+		});
+	}
 
 }
 
@@ -99,55 +75,38 @@ class Investor3 {
 		return beginDay;
 	}
 
+	public void setBeginDay(int beginDay) {
+		this.beginDay = beginDay;
+	}
+
 	public int getEndDay() {
 		return endDay;
 	}
 
-	@Override
-	public String toString() {
-		return "Investor3 [beginDay=" + beginDay + ", endDay=" + endDay + "]";
+	public void setEndDay(int endDay) {
+		this.endDay = endDay;
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + beginDay;
-		result = prime * result + endDay;
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Investor3 other = (Investor3) obj;
-		if (beginDay != other.beginDay)
-			return false;
-		if (endDay != other.endDay)
-			return false;
-		return true;
-	}
 }
 
 public class MeetupSchedule3 {
 
 	public static void main(String[] args) throws IOException {
-		int resultado = CountMeetings2.countMeetings(Arrays.asList(1, 2, 3, 3, 3), Arrays.asList(2, 2, 3, 4, 4));
-		System.out.println("Resultado: " + resultado);
-
-//		int resultado = CountMeetings2.countMeetings(Arrays.asList(1, 1, 2), Arrays.asList(1, 2, 2));
-//		System.out.println("Resultado: " + resultado);
-
-//		int resultado = CountMeetings2.countMeetings(Arrays.asList(1, 2, 1, 2, 2), Arrays.asList(3, 2, 1, 3, 3));
-//		System.out.println("Resultado: " + resultado);
-
-//		int resultado = CountMeetings2.countMeetings(Arrays.asList(1, 10, 11), Arrays.asList(11, 10, 11));
-//		System.out.println("Resultado: " + resultado);
+//		int resultado1 = CountMeetings3.countMeetings(Arrays.asList(1, 2, 3, 3, 3), Arrays.asList(2, 2, 3, 4, 4));
+//		String result1 = resultado1 == 4 ? "Teste 1 PASSOU -> ;)" : "TESTE 1 FALHOU -> :(";
+//		System.out.println(result1);
+//
+//		int resultado2 = CountMeetings3.countMeetings(Arrays.asList(1, 1, 2), Arrays.asList(1, 2, 2));
+//		String result2 = resultado2 == 2 ? "Teste 2 PASSOU -> ;)" : "TESTE 2 FALHOU -> :(";
+//		System.out.println(result2);
+//
+//		int resultado3 = CountMeetings3.countMeetings(Arrays.asList(1, 2, 1, 2, 2), Arrays.asList(3, 2, 1, 3, 3));
+//		String result3 = resultado3 == 3 ? "Teste 3 PASSOU -> ;)" : "TESTE 3 FALHOU -> :(";
+//		System.out.println(result3);
+//
+//		int resultado4 = CountMeetings3.countMeetings(Arrays.asList(1, 10, 11), Arrays.asList(11, 10, 11));
+//		String result4 = resultado4 == 3 ? "Teste 4 PASSOU -> ;)" : "TESTE 4 FALHOU -> :(";
+//		System.out.println(result4);
 
 		List<Integer> diaInicial = Arrays.asList(43862, 2403, 10323, 66772, 64109, 17862, 93881, 22542, 79323, 6520,
 				68034, 54504, 73894, 89711, 63331, 75543, 76061, 60853, 21518, 89656, 11158, 37357, 33719, 80260, 33075,
@@ -286,8 +245,9 @@ public class MeetupSchedule3 {
 				99054, 57921, 96162, 94500, 71810, 20213, 97172, 89154, 97847, 56415, 96523, 95250, 42393, 69261,
 				91225);
 
-//		int resultado = CountMeetings2.countMeetings(diaInicial, diaFinal);
-//		System.out.println("Resultado: " + resultado);
-	}
+		int resultado5 = CountMeetings3.countMeetings(diaInicial, diaFinal);
+		String result5 = resultado5 == 1000 ? "Teste 5sa PASSOU -> ;)" : "TESTE 5 FALHOU -> :(";
+		System.out.println(result5);
 
+	}
 }
