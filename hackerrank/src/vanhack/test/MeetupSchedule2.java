@@ -39,25 +39,48 @@ class CountMeetings2 {
 		// Constraint: 1 <= firstDay[i], lastDay[i] <= 100000 (where 0 <= i < n)
 		// Constraint: firstDay[i] <= lastDay[i] (where 0 <= i < n)
 
-		ArrayList<Investor2> investidores = new ArrayList<Investor2>();
-		
+		List<Investor2> investidores = new ArrayList<Investor2>();
+
 		for (int i = 0; i < firstDay.size(); i++) {
 			investidores.add(new Investor2(firstDay.get(i), lastDay.get(i)));
 		}
 
-		System.out.println("Total investidores: " + investidores.size());
 		sortListInvestidores(investidores);
-		
+
+		System.out.println("Total investidores ANTES: " + investidores.size());
+
+
 		Set<Integer> agenda = new HashSet<Integer>();
-		
-		for (int i = 0; i < investidores.size(); i++) {
-			Investor2 investidor = investidores.get(i);
+
+		List<Investor2> investidoresAuxs = new ArrayList<Investor2>(investidores);
+		for (int i = 0; i < investidoresAuxs.size(); i++) {
+			Investor2 investidor = investidoresAuxs.get(i);
 
 			if (investidor.getBeginDay().equals(investidor.getEndDay())) {
 				agenda.add(investidor.getBeginDay());
+				investidores.remove(investidor);
 				continue;
 			}
-				
+
+			if (diaInicialJaOcupadoNaAgenda(agenda, investidor)) {
+				if (diaFinalJaOcupadoNaAgenda(agenda, investidor)) {
+					continue;
+				} else {
+					agenda.add(investidor.getEndDay());
+					investidores.remove(investidor);
+				}
+			} else {
+				agenda.add(investidor.getBeginDay());
+				investidores.remove(investidor);
+			}
+		}
+
+		System.out.println("Total investidores aux: " + investidoresAuxs.size());
+		System.out.println("Total investidores DEPOIS: " + investidores.size());
+
+		for (int i = 0; i < investidores.size(); i++) {
+			Investor2 investidor = investidores.get(i);
+
 			if (diaInicialJaOcupadoNaAgenda(agenda, investidor)) {
 				if (diaFinalJaOcupadoNaAgenda(agenda, investidor)) {
 					continue;
@@ -66,25 +89,20 @@ class CountMeetings2 {
 				}
 			} else {
 				agenda.add(investidor.getBeginDay());
-			}		
+			}
 		}
-		
-//		System.out.println("Total investidores aux: " + investidoresAux.size());
-//		for (Investor2 inv : investidoresAux) {
-//			System.out.println(inv);
-//		}
-		
+
 		return agenda.size();
 	}
-	
-	private static void sortListInvestidores(ArrayList<Investor2> investidores) {
+
+	private static void sortListInvestidores(List<Investor2> investidores) {
 		Collections.sort(investidores, new Comparator<Investor2>() {
 			@Override
 			public int compare(Investor2 o1, Investor2 o2) {
 				Integer beginDay1 = o1.getBeginDay();
 				Integer beginDay2 = o2.getBeginDay();
 
-				int resultBeginDay = beginDay1.compareTo(beginDay2);
+				int resultBeginDay = beginDay1 - beginDay2;
 
 				if (resultBeginDay != 0) {
 					return resultBeginDay;
@@ -92,54 +110,45 @@ class CountMeetings2 {
 
 				Integer endDay1 = o1.getEndDay();
 				Integer endDay2 = o2.getEndDay();
-				return endDay1.compareTo(endDay2);
+				return endDay1 - endDay2;
 			}
 		});
 	}
 
 	public static boolean diaInicialJaOcupadoNaAgenda(Set<Integer> agenda, Investor2 investidor) {
-//		boolean diaInicialJaOcupadoNaAgenda = false;
-//	
-//		
-//		Integer achou = agenda.parallelStream()
-//			.filter(a -> a.equals(investidor.getBeginDay())).findAny().orElse(null);
-		
-//		for (Integer dia : agenda) {
-//			if (dia.equals(investidor.getBeginDay())) {
-//				diaInicialJaOcupadoNaAgenda = true;
-//				break;
-//			}
-//		}
-		
-		
-//		return diaInicialJaOcupadoNaAgenda;
-//		return achou != null ? true : false;
-		
+		// boolean diaInicialJaOcupadoNaAgenda = false;
+
+		// for (Integer dia : agenda) {
+		// if (dia.equals(investidor.getBeginDay())) {
+		// diaInicialJaOcupadoNaAgenda = true;
+		// break;
+		// }
+		// }
+
+		// return diaInicialJaOcupadoNaAgenda;
+
 		return agenda.contains(investidor.getBeginDay());
+
 	}
-	
+
 	public static boolean diaFinalJaOcupadoNaAgenda(Set<Integer> agenda, Investor2 investidor) {
-//		boolean diaFinalJaOcupadoNaAgenda = false;
-//		
-//		Integer achou = agenda.stream()
-//				.filter(a -> a.equals(investidor.getEndDay())).findAny().orElse(null);
-		
-//		for (Integer dia : agenda) {
-//			if (dia.equals(investidor.getEndDay())) {
-//				diaFinalJaOcupadoNaAgenda = true;
-//				break;
-//			}
-//		}
-		
-//		return diaFinalJaOcupadoNaAgenda;
-//		return achou != null ? true : false;
-		
+		// boolean diaFinalJaOcupadoNaAgenda = false;
+
+		// for (Integer dia : agenda) {
+		// if (dia.equals(investidor.getEndDay())) {
+		// diaFinalJaOcupadoNaAgenda = true;
+		// break;
+		// }
+		// }
+
+		// return diaFinalJaOcupadoNaAgenda;
+
 		return agenda.contains(investidor.getEndDay());
 	}
 
 }
 
-class Investor2 implements Comparable<Investor2>{
+class Investor2 implements Comparable<Investor2> {
 
 	private Integer beginDay;
 	private Integer endDay;
@@ -203,10 +212,19 @@ class Investor2 implements Comparable<Investor2>{
 
 	@Override
 	public int compareTo(Investor2 o) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+		Integer beginDay1 = o.getBeginDay();
+		Integer beginDay2 = o.getBeginDay();
 
+		int resultBeginDay = beginDay1 - beginDay2;
+
+		if (resultBeginDay != 0) {
+			return resultBeginDay;
+		}
+
+		Integer endDay1 = o.getEndDay();
+		Integer endDay2 = o.getEndDay();
+		return endDay1 - endDay2;
+	}
 }
 
 public class MeetupSchedule2 {
@@ -215,8 +233,8 @@ public class MeetupSchedule2 {
 //		int resultado = CountMeetings2.countMeetings(Arrays.asList(1, 2, 3, 3, 3), Arrays.asList(2, 2, 3, 4, 4));
 //		System.out.println("Resultado: " + resultado);
 
-//		int resultado = CountMeetings2.countMeetings(Arrays.asList(1, 1, 2), Arrays.asList(1, 2, 2));
-//		System.out.println("Resultado: " + resultado);
+		int resultado = CountMeetings2.countMeetings(Arrays.asList(1, 1, 2), Arrays.asList(1, 2, 2));
+		System.out.println("Resultado: " + resultado);
 
 //		int resultado = CountMeetings2.countMeetings(Arrays.asList(1, 2, 1, 2, 2), Arrays.asList(3, 2, 1, 3, 3));
 //		System.out.println("Resultado: " + resultado);
@@ -361,8 +379,8 @@ public class MeetupSchedule2 {
 				99054, 57921, 96162, 94500, 71810, 20213, 97172, 89154, 97847, 56415, 96523, 95250, 42393, 69261,
 				91225);
 
-		int resultado = CountMeetings2.countMeetings(diaInicial, diaFinal);
-		System.out.println("Resultado: " + resultado);
+//		int resultado = CountMeetings2.countMeetings(diaInicial, diaFinal);
+//		System.out.println("Resultado: " + resultado);
 
 	}
 }
