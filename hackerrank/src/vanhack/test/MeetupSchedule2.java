@@ -47,7 +47,7 @@ class CountMeetings2 {
 
 		sortListInvestidores(investidores);
 
-		System.out.println("Total investidores ANTES: " + investidores.size());
+//		System.out.println("Total investidores ANTES: " + investidores.size());
 
 
 		Set<Integer> agenda = new HashSet<Integer>();
@@ -75,8 +75,8 @@ class CountMeetings2 {
 			}
 		}
 
-		System.out.println("Total investidores aux: " + investidoresAuxs.size());
-		System.out.println("Total investidores DEPOIS: " + investidores.size());
+//		System.out.println("Total investidores aux: " + investidoresAuxs.size());
+//		System.out.println("Total investidores DEPOIS: " + investidores.size());
 
 		for (int i = 0; i < investidores.size(); i++) {
 			Investor2 investidor = investidores.get(i);
@@ -230,17 +230,22 @@ class Investor2 implements Comparable<Investor2> {
 public class MeetupSchedule2 {
 
 	public static void main(String[] args) throws IOException {
-//		int resultado = CountMeetings2.countMeetings(Arrays.asList(1, 2, 3, 3, 3), Arrays.asList(2, 2, 3, 4, 4));
-//		System.out.println("Resultado: " + resultado);
+		int resultado1 = CountMeetings2.countMeetings(Arrays.asList(1, 2, 3, 3, 3), Arrays.asList(2, 2, 3, 4, 4));
+		String result1 = resultado1 == 4 ? "Teste 1 PASSOU -> ;)" : "TESTE 1 FALHOU -> :(";
+		System.out.println(result1);
 
-		int resultado = CountMeetings2.countMeetings(Arrays.asList(1, 1, 2), Arrays.asList(1, 2, 2));
-		System.out.println("Resultado: " + resultado);
+		int resultado2 = CountMeetings2.countMeetings(Arrays.asList(1, 1, 2), Arrays.asList(1, 2, 2));
+		String result2 = resultado2 == 2 ? "Teste 2 PASSOU -> ;)" : "TESTE 2 FALHOU -> :(";
+		System.out.println(result2);
 
-//		int resultado = CountMeetings2.countMeetings(Arrays.asList(1, 2, 1, 2, 2), Arrays.asList(3, 2, 1, 3, 3));
-//		System.out.println("Resultado: " + resultado);
+		int resultado3 = CountMeetings2.countMeetings(Arrays.asList(1, 2, 1, 2, 2), Arrays.asList(3, 2, 1, 3, 3));
+		String result3 = resultado3 == 3 ? "Teste 3 PASSOU -> ;)" : "TESTE 3 FALHOU -> :(";
+		System.out.println(result3);
 
-//		int resultado = CountMeetings2.countMeetings(Arrays.asList(1, 10, 11), Arrays.asList(11, 10, 11));
-//		System.out.println("Resultado: " + resultado);
+		int resultado4 = CountMeetings2.countMeetings(Arrays.asList(1, 10, 11), Arrays.asList(11, 10, 11));
+		String result4 = resultado4 == 3 ? "Teste 4 PASSOU -> ;)" : "TESTE 4 FALHOU -> :(";
+		System.out.println(result4);
+		
 
 		List<Integer> diaInicial = Arrays.asList(43862, 2403, 10323, 66772, 64109, 17862, 93881, 22542, 79323, 6520,
 				68034, 54504, 73894, 89711, 63331, 75543, 76061, 60853, 21518, 89656, 11158, 37357, 33719, 80260, 33075,
@@ -379,8 +384,9 @@ public class MeetupSchedule2 {
 				99054, 57921, 96162, 94500, 71810, 20213, 97172, 89154, 97847, 56415, 96523, 95250, 42393, 69261,
 				91225);
 
-//		int resultado = CountMeetings2.countMeetings(diaInicial, diaFinal);
-//		System.out.println("Resultado: " + resultado);
+		int resultado5 = CountMeetings2.countMeetings(diaInicial, diaFinal);
+		String result5 = resultado5 == 1000 ? "Teste 5 PASSOU -> ;)" : "TESTE 5 FALHOU -> :(";
+		System.out.println(result5);
 
 	}
 }
