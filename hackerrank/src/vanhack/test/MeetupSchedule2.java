@@ -39,22 +39,19 @@ class CountMeetings2 {
 		// Constraint: 1 <= firstDay[i], lastDay[i] <= 100000 (where 0 <= i < n)
 		// Constraint: firstDay[i] <= lastDay[i] (where 0 <= i < n)
 
-		List<Investor2> investidores = new ArrayList<Investor2>();
+		List<Schedules2> investidores = new ArrayList<Schedules2>();
 
 		for (int i = 0; i < firstDay.size(); i++) {
-			investidores.add(new Investor2(firstDay.get(i), lastDay.get(i)));
+			investidores.add(new Schedules2(firstDay.get(i), lastDay.get(i)));
 		}
 
 		sortListInvestidores(investidores);
 
-//		System.out.println("Total investidores ANTES: " + investidores.size());
-
-
 		Set<Integer> agenda = new HashSet<Integer>();
 
-		List<Investor2> investidoresAuxs = new ArrayList<Investor2>(investidores);
+		List<Schedules2> investidoresAuxs = new ArrayList<Schedules2>(investidores);
 		for (int i = 0; i < investidoresAuxs.size(); i++) {
-			Investor2 investidor = investidoresAuxs.get(i);
+			Schedules2 investidor = investidoresAuxs.get(i);
 
 			if (investidor.getBeginDay().equals(investidor.getEndDay())) {
 				agenda.add(investidor.getBeginDay());
@@ -76,7 +73,7 @@ class CountMeetings2 {
 		}
 
 		for (int i = 0; i < investidores.size(); i++) {
-			Investor2 investidor = investidores.get(i);
+			Schedules2 investidor = investidores.get(i);
 
 			if (diaInicialJaOcupadoNaAgenda(agenda, investidor)) {
 				if (diaFinalJaOcupadoNaAgenda(agenda, investidor)) {
@@ -92,10 +89,10 @@ class CountMeetings2 {
 		return agenda.size();
 	}
 
-	private static void sortListInvestidores(List<Investor2> investidores) {
-		Collections.sort(investidores, new Comparator<Investor2>() {
+	private static void sortListInvestidores(List<Schedules2> investidores) {
+		Collections.sort(investidores, new Comparator<Schedules2>() {
 			@Override
-			public int compare(Investor2 o1, Investor2 o2) {
+			public int compare(Schedules2 o1, Schedules2 o2) {
 				Integer beginDay1 = o1.getBeginDay();
 				Integer beginDay2 = o2.getBeginDay();
 
@@ -112,22 +109,22 @@ class CountMeetings2 {
 		});
 	}
 
-	private static boolean diaInicialJaOcupadoNaAgenda(Set<Integer> agenda, Investor2 investidor) {
+	private static boolean diaInicialJaOcupadoNaAgenda(Set<Integer> agenda, Schedules2 investidor) {
 		return agenda.contains(investidor.getBeginDay());
 	}
 
-	private static boolean diaFinalJaOcupadoNaAgenda(Set<Integer> agenda, Investor2 investidor) {
+	private static boolean diaFinalJaOcupadoNaAgenda(Set<Integer> agenda, Schedules2 investidor) {
 		return agenda.contains(investidor.getEndDay());
 	}
 
 }
 
-class Investor2 implements Comparable<Investor2> {
+class Schedules2 implements Comparable<Schedules2> {
 
 	private Integer beginDay;
 	private Integer endDay;
 
-	public Investor2(Integer beginDay, Integer endDay) {
+	public Schedules2(Integer beginDay, Integer endDay) {
 		this.beginDay = beginDay;
 		this.endDay = endDay;
 	}
@@ -165,7 +162,7 @@ class Investor2 implements Comparable<Investor2> {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Investor2 other = (Investor2) obj;
+		Schedules2 other = (Schedules2) obj;
 		if (beginDay == null) {
 			if (other.beginDay != null)
 				return false;
@@ -185,7 +182,7 @@ class Investor2 implements Comparable<Investor2> {
 	}
 
 	@Override
-	public int compareTo(Investor2 o) {
+	public int compareTo(Schedules2 o) {
 		Integer beginDay1 = o.getBeginDay();
 		Integer beginDay2 = o.getBeginDay();
 

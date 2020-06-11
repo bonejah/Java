@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 class CountMeetings3 {
@@ -17,76 +16,41 @@ class CountMeetings3 {
 	 */
 
 	public static int countMeetings(List<Integer> firstDay, List<Integer> lastDay) {
-		List<Investor3> list = new ArrayList<>(); // create a List of Interval
+		List<String> meetings = new ArrayList<String>();
+		
+		// Sorted by finishTime
+		Collections.sort(lastDay);
+		int totalMeetings = firstDay.size();
 		
 		for (int i = 0; i < firstDay.size(); i++) {
-			list.add(new Investor3(firstDay.get(i), firstDay.get(i) + lastDay.get(i)));
+			System.out.println("Start: " + firstDay.get(i) + " - Finish: " + lastDay.get(i));
 		}
 		
-		list.sort(Comparator.comparingInt(Investor3::getEndDay)); // sort by finish times ascending
-
-		int res = 0;
-		int prevEnd = Integer.MIN_VALUE; // finish time of the previous meeting
-
-		for (Investor3 i : list) {
-			if (i.getBeginDay() >= prevEnd) { // is there a conflict with the previous meeting?
-				res++;
-				prevEnd = i.getEndDay(); // update the previous finish time
-			}
+		
+		// The first activity always gets selected 
+		int i = 0, j;
+		meetings.add("Start: " + firstDay.get(i));
+		
+		 // Consider rest of the activities 
+		for (j = i; j < totalMeetings; j++) {
+			
+			 // If this activity has start time greater than or 
+	         // equal to the finish time of previously selected 
+	         // activity, then select it 
+			
+			 if (firstDay.get(j) >= lastDay.get(i)) {
+				 meetings.add("Start: " + firstDay.get(j));
+				 i = j;
+			 }
 		}
-		return res;
+		
+		System.out.println(meetings);
+		
+		
+		return meetings.size();
+	
 	}
-
-	private static void sortListInvestidoresByDiaInicial(List<Investor3> investidores) {
-		Collections.sort(investidores, new Comparator<Investor3>() {
-			@Override
-			public int compare(Investor3 o1, Investor3 o2) {
-				Integer beginDay1 = o1.getBeginDay();
-				Integer beginDay2 = o2.getBeginDay();
-				return beginDay1.compareTo(beginDay2);
-			}
-		});
-	}
-
-	private static void sortListInvestidoresByDiaFinal(List<Investor3> investidores) {
-		Collections.sort(investidores, new Comparator<Investor3>() {
-			@Override
-			public int compare(Investor3 o1, Investor3 o2) {
-				Integer endDay1 = o1.getEndDay();
-				Integer endDay2 = o2.getEndDay();
-				return endDay1.compareTo(endDay2);
-			}
-		});
-	}
-
-}
-
-class Investor3 {
-
-	private int beginDay;
-	private int endDay;
-
-	public Investor3(Integer beginDay, Integer endDay) {
-		this.beginDay = beginDay;
-		this.endDay = endDay;
-	}
-
-	public int getBeginDay() {
-		return beginDay;
-	}
-
-	public void setBeginDay(int beginDay) {
-		this.beginDay = beginDay;
-	}
-
-	public int getEndDay() {
-		return endDay;
-	}
-
-	public void setEndDay(int endDay) {
-		this.endDay = endDay;
-	}
-
+	
 }
 
 public class MeetupSchedule3 {
@@ -100,9 +64,9 @@ public class MeetupSchedule3 {
 //		String result2 = resultado2 == 2 ? "Teste 2 PASSOU -> ;)" : "TESTE 2 FALHOU -> :(";
 //		System.out.println(result2);
 //
-//		int resultado3 = CountMeetings3.countMeetings(Arrays.asList(1, 2, 1, 2, 2), Arrays.asList(3, 2, 1, 3, 3));
-//		String result3 = resultado3 == 3 ? "Teste 3 PASSOU -> ;)" : "TESTE 3 FALHOU -> :(";
-//		System.out.println(result3);
+		int resultado3 = CountMeetings3.countMeetings(Arrays.asList(1, 2, 1, 2, 2), Arrays.asList(3, 2, 1, 3, 3));
+		String result3 = resultado3 == 3 ? "Teste 3 PASSOU -> ;)" : "TESTE 3 FALHOU -> :(";
+		System.out.println(result3);
 //
 //		int resultado4 = CountMeetings3.countMeetings(Arrays.asList(1, 10, 11), Arrays.asList(11, 10, 11));
 //		String result4 = resultado4 == 3 ? "Teste 4 PASSOU -> ;)" : "TESTE 4 FALHOU -> :(";
@@ -245,9 +209,12 @@ public class MeetupSchedule3 {
 				99054, 57921, 96162, 94500, 71810, 20213, 97172, 89154, 97847, 56415, 96523, 95250, 42393, 69261,
 				91225);
 
-		int resultado5 = CountMeetings3.countMeetings(diaInicial, diaFinal);
-		String result5 = resultado5 == 1000 ? "Teste 5sa PASSOU -> ;)" : "TESTE 5 FALHOU -> :(";
-		System.out.println(result5);
+//		int resultado5 = CountMeetings3.countMeetings(diaInicial, diaFinal);
+//		String result5 = resultado5 == 1000 ? "Teste 5sa PASSOU -> ;)" : "TESTE 5 FALHOU -> :(";
+//		System.out.println(result5);
+		
 
 	}
 }
+
+

@@ -22,87 +22,83 @@ class PredictAnswer {
 	 */
 
 	public static List<Integer> predictAnswer(List<Integer> stockData, List<Integer> queries) {
-		List<Stock> stocks = new ArrayList<Stock>();
-		List<Integer> lsMenoresDias = new ArrayList<Integer>();
+		List<Integer> predictions = new ArrayList<>();
 
-		for (int i = 0; i < stockData.size(); i++) {
-			stocks.add(new Stock(i, i + 1, stockData.get(i)));
-		}
+        /* to show -1 if there is no such stock price */
+        for (int i = 0; i < queries.size(); i++) {
+            predictions.add(-1);
+        }
 
-		for (Stock stock : stocks) {
-			System.out.println(stock);
-		}
+        for (int i = 0; i < queries.size(); i++) {
+            /* the query index starts from 1 or supposes the first index is 1 */
+            int index = (int) (queries.get(i) - 1);
+            int value = stockData.get(index).intValue();
+            
+            for (int j = index + 1, k = index -1;  j < stockData.size() -1 || k > 1; j++, k--) {
+            	if (k < 1) {
+                    if (stockData.get(j).intValue() < value) {
+                        predictions.set(i, j + 1);
+                        break;
+                    }
+                } 
 
-		System.out.println("======================================");
+                else if (j > stockData.size() - 1) {
+                    if (stockData.get(k).intValue() < value) {
+                        predictions.set(i, k + 1);
+                        break;
+                    }
+                } 
 
-		for (int i = 0; i < queries.size(); i++) {
-			Integer querie = queries.get(i);
+                else if (stockData.get(k).intValue() < value) {
+                    predictions.set(i, k + 1);
+                    break;
+                } 
 
-			Stock stockAtual = getStockByQuerieDay(stocks, querie);
-			Stock stockAnterior = getStockByQuerieDay(stocks, querie - 1);
-			Stock stockPosterior = getStockByQuerieDay(stocks, querie + 1);
-
-			int diaComMenorValor = getDiaComMenorValor(stocks, stockAtual);
-
-			if (diaComMenorValor == -1) {
-				lsMenoresDias.add(getDiaComMenorValor(stocks, stockAtual));
-				continue;
-			} else if (stockAtual.getIndex() == 0) {
-				lsMenoresDias.add(getDiaComMenorValor(stocks, stockAtual));
-				continue;
-			} else if (checkDiaAnteriorEPosteriorSaoMenoresQueDiaAtual(stockAtual, stockAnterior, stockPosterior)) {
-				lsMenoresDias.add(stockAnterior.getDay());
-				continue;
-			} else if (checkDiaAnteriorEPosteriorSaoMaioresQueDiaAtual(stockAtual, stockAnterior, stockPosterior)) {
-				for (Stock stockMenoValor : stocks) {
-					if (stockMenoValor.getValue() < stockAtual.getValue()) {
-						diaComMenorValor = stockMenoValor.getDay();
-						break;
-					}
-				}
-				lsMenoresDias.add(diaComMenorValor);
-				continue;
+                else if (stockData.get(j).intValue() < value) {
+                    predictions.set(i, j + 1);
+                    break;
+                }
 			}
-		}
 
-		return lsMenoresDias;
+//            int j = index + 1;
+//            int k = index - 1;
+//
+//            while (j < stockData.size() - 1 || k > 1) {
+//
+//                if (k < 1) {
+//                    if (stockData.get(j).intValue() < value) {
+//                        predictions.set(i, j + 1);
+//                        break;
+//                    }
+//                } 
+//
+//                else if (j > stockData.size() - 1) {
+//                    if (stockData.get(k).intValue() < value) {
+//                        predictions.set(i, k + 1);
+//                        break;
+//                    }
+//                } 
+//
+//                else if (stockData.get(k).intValue() < value) {
+//                    predictions.set(i, k + 1);
+//                    break;
+//                } 
+//
+//                else if (stockData.get(j).intValue() < value) {
+//                    predictions.set(i, j + 1);
+//                    break;
+//                }
+//
+//                j++;
+//                k--;
+//            }
+        
+        }
+
+        return predictions;
+
+		
 	}
-
-	private static boolean checkDiaAnteriorEPosteriorSaoMaioresQueDiaAtual(Stock stockAtual, Stock stockAnterior,
-			Stock stockPosterior) {
-		return (stockAnterior.getValue() > stockAtual.getValue())
-				&& (stockPosterior.getValue() > stockAtual.getValue());
-	}
-
-	private static boolean checkDiaAnteriorEPosteriorSaoMenoresQueDiaAtual(Stock stockAtual, Stock stockAnterior,
-			Stock stockPosterior) {
-		return (stockAnterior.getValue() < stockAtual.getValue())
-				|| (stockPosterior.getValue() < stockAtual.getValue());
-	}
-
-	private static int getDiaComMenorValor(List<Stock> stocks, Stock stockAtual) {
-		int diaComMenorValor = -1;
-
-		for (Stock stockMenoValor : stocks) {
-			if (stockMenoValor.getValue() < stockAtual.getValue()) {
-				diaComMenorValor = stockMenoValor.getDay();
-				break;
-			}
-		}
-
-		return diaComMenorValor;
-	}
-
-	private static Stock getStockByQuerieDay(List<Stock> stocks, Integer querie) {
-		for (Stock stock : stocks) {
-			if (stock.getDay() == querie) {
-				return stock;
-			}
-		}
-
-		return null;
-	}
-
 }
 
 class Stock {
