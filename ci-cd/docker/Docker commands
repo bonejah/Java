@@ -1,0 +1,25 @@
+Course: Integration continuos whit tests, using Jenkins
+https://github.com/wcaquinocursos
+------------------------------------------------------------------------------
+Docker commands
+
+docker pull hello-world: install a new image on docker
+docker images: list images installed
+docker rmi -f hello-world: remove an image
+docker run hello-world: execute image
+docker ps / docker ps -a: see images running
+docker stop hello-world: stop image
+docker start hello-world: start image
+docker-machine ip: find ip: 
+docke prune: remove volume
+
+Docker compose
+docker-machine ip: up all services
+
+------------------------------------------------------------------------------
+Installing Postgres
+docker run --name pg-tasks -e POSTGRES_DB=tasks -e POSTGRES_PASSWORD=password -p 5433:5432 postgres:9.6
+
+
+------------------------------------------------------------------------------
+
