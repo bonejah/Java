@@ -40,6 +40,7 @@ public class _18_1_Anagrams {
 
 
 
+	@SuppressWarnings("unused")
 	private static LinkedHashMap<String, Integer> comparingByValue(Map<String, Integer> hashMap) {
 //		The example above not order by value		
 //		Map<String, Integer> hashMapSorted0 = hashMap1.entrySet().stream()

@@ -3,7 +3,7 @@ package vanhack.test;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 class CountMeetings3 {
@@ -15,58 +15,95 @@ class CountMeetings3 {
 	 * parameters: 1. INTEGER_ARRAY arrival 2. INTEGER_ARRAY departure
 	 */
 
-	public static int countMeetings(List<Integer> firstDay, List<Integer> lastDay) {
-		List<String> meetings = new ArrayList<String>();
-		
-		// Sorted by finishTime
-		Collections.sort(lastDay);
-		int totalMeetings = firstDay.size();
-		
-		for (int i = 0; i < firstDay.size(); i++) {
-			System.out.println("Start: " + firstDay.get(i) + " - Finish: " + lastDay.get(i));
+	public static int countMeetings(List<Integer> start, List<Integer> end) {
+
+		List<Schedule> meetings = new ArrayList<Schedule>();
+		List<Schedule> schedules = new ArrayList<Schedule>();
+
+		for (int i = 0; i < start.size(); i++) {
+			meetings.add(new Schedule(start.get(i), end.get(i)));
 		}
-		
-		
-		// The first activity always gets selected 
+
+		meetings.sort(Comparator.comparingInt(i -> i.getEnd()));
+
 		int i = 0, j;
-		meetings.add("Start: " + firstDay.get(i));
-		
-		 // Consider rest of the activities 
-		for (j = i; j < totalMeetings; j++) {
-			
-			 // If this activity has start time greater than or 
-	         // equal to the finish time of previously selected 
-	         // activity, then select it 
-			
-			 if (firstDay.get(j) >= lastDay.get(i)) {
-				 meetings.add("Start: " + firstDay.get(j));
-				 i = j;
-			 }
+
+		schedules.add(meetings.get(i));
+
+		for (j = 1; j < meetings.size(); j++) {
+
+			Schedule actual = meetings.get(i);
+			Schedule next = meetings.get(j);
+
+			if (actual.getStart() == actual.getEnd()) {
+				if (next.getStart() >= actual.getEnd()) {
+//					schedules.add(next);
+//					i++;
+					continue;
+				}
+			} else if (actual.getStart() != actual.getEnd()) {
+				if (next.getStart() >= actual.getEnd()) {
+					schedules.add(next);
+					i++;
+				}
+			}
+
 		}
-		
-		System.out.println(meetings);
-		
-		
-		return meetings.size();
-	
+
+		System.out.println(schedules);
+
+		return schedules.size();
 	}
-	
+
+}
+
+class Schedule {
+	private int start;
+	private int end;
+
+	public Schedule(int start, int end) {
+		super();
+		this.start = start;
+		this.end = end;
+	}
+
+	public int getStart() {
+		return start;
+	}
+
+	public void setStart(int start) {
+		this.start = start;
+	}
+
+	public int getEnd() {
+		return end;
+	}
+
+	public void setEnd(int end) {
+		this.end = end;
+	}
+
+	@Override
+	public String toString() {
+		return "Schedule [start=" + start + ", end=" + end + "]";
+	}
+
 }
 
 public class MeetupSchedule3 {
 
 	public static void main(String[] args) throws IOException {
-//		int resultado1 = CountMeetings3.countMeetings(Arrays.asList(1, 2, 3, 3, 3), Arrays.asList(2, 2, 3, 4, 4));
-//		String result1 = resultado1 == 4 ? "Teste 1 PASSOU -> ;)" : "TESTE 1 FALHOU -> :(";
-//		System.out.println(result1);
-//
-//		int resultado2 = CountMeetings3.countMeetings(Arrays.asList(1, 1, 2), Arrays.asList(1, 2, 2));
-//		String result2 = resultado2 == 2 ? "Teste 2 PASSOU -> ;)" : "TESTE 2 FALHOU -> :(";
-//		System.out.println(result2);
-//
-		int resultado3 = CountMeetings3.countMeetings(Arrays.asList(1, 2, 1, 2, 2), Arrays.asList(3, 2, 1, 3, 3));
-		String result3 = resultado3 == 3 ? "Teste 3 PASSOU -> ;)" : "TESTE 3 FALHOU -> :(";
-		System.out.println(result3);
+		int resultado1 = CountMeetings3.countMeetings(Arrays.asList(1, 2, 3, 3, 3), Arrays.asList(2, 2, 3, 4, 4));
+		String result1 = resultado1 == 4 ? "Teste 1 PASSOU -> ;)" : "TESTE 1 FALHOU -> :(";
+		System.out.println(result1);
+
+		int resultado2 = CountMeetings3.countMeetings(Arrays.asList(1, 1, 2), Arrays.asList(1, 2, 2));
+		String result2 = resultado2 == 2 ? "Teste 2 PASSOU -> ;)" : "TESTE 2 FALHOU -> :(";
+		System.out.println(result2);
+
+//		int resultado3 = CountMeetings3.countMeetings(Arrays.asList(1, 2, 1, 2, 2), Arrays.asList(3, 2, 1, 3, 3));
+//		String result3 = resultado3 == 3 ? "Teste 3 PASSOU -> ;)" : "TESTE 3 FALHOU -> :(";
+//		System.out.println(result3);
 //
 //		int resultado4 = CountMeetings3.countMeetings(Arrays.asList(1, 10, 11), Arrays.asList(11, 10, 11));
 //		String result4 = resultado4 == 3 ? "Teste 4 PASSOU -> ;)" : "TESTE 4 FALHOU -> :(";
@@ -212,9 +249,6 @@ public class MeetupSchedule3 {
 //		int resultado5 = CountMeetings3.countMeetings(diaInicial, diaFinal);
 //		String result5 = resultado5 == 1000 ? "Teste 5sa PASSOU -> ;)" : "TESTE 5 FALHOU -> :(";
 //		System.out.println(result5);
-		
 
 	}
 }
-
-

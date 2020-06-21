@@ -6,7 +6,7 @@ import java.util.Scanner;
 public class _11_JavaIntToString {
 
 	public static void main(String[] args) {
-		DoNotTerminate.forbidExit();
+		DoNotTerminate2.forbidExit();
 
 		try {
 			Scanner in = new Scanner(System.in);
@@ -24,7 +24,7 @@ public class _11_JavaIntToString {
 			} else {
 				System.out.println("Wrong answer.");
 			}
-		} catch (DoNotTerminate.ExitTrappedException e) {
+		} catch (DoNotTerminate2.ExitTrappedException e) {
 			System.out.println("Unsuccessful Termination!!");
 		}
 	}

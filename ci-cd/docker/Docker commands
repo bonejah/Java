@@ -11,7 +11,7 @@ docker ps / docker ps -a: see images running
 docker stop hello-world: stop image
 docker start hello-world: start image
 docker-machine ip: find ip: 
-docke prune: remove volume
+docker prune: remove volume
 
 Docker compose
 docker-machine ip: up all services
