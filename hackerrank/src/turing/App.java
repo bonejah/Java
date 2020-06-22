@@ -1,5 +1,7 @@
 package turing;
 
+import java.util.Map;
+
 public class App {
 
 	public static void main(String[] args) {
@@ -20,6 +22,10 @@ public class App {
 		animal.move();
 //		animal.wagTail();
 //		animal.fetch();
+		
+		 int mask = 0x000F;
+	        int value = 0x2222;
+	        System.out.println(value & mask);
 		
 		
 	}
