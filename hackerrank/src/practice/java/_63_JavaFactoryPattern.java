@@ -7,10 +7,10 @@ public class _63_JavaFactoryPattern {
 
 	public static void main(String args[]) {
 		Do_Not_Terminate.forbidExit();
+		Scanner sc = new Scanner(System.in);
 
 		try {
 
-			Scanner sc = new Scanner(System.in);
 			// creating the factory
 			FoodFactory foodFactory = new FoodFactory();
 
@@ -21,7 +21,10 @@ public class _63_JavaFactoryPattern {
 			System.out.println(food.getType());
 		} catch (Do_Not_Terminate.ExitTrappedException e) {
 			System.out.println("Unsuccessful Termination!!");
-		}
+		} 
+		
+		sc.close();
+		
 	}
 
 }
