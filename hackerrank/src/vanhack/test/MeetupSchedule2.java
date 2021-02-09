@@ -4,153 +4,149 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
+
+import javax.swing.text.StyledEditorKit.BoldAction;
 
 class CountMeetings2 {
 
 	/*
-	 * Complete the 'countMeetings' function below.
+	 * s Complete the 'countMeetings' function below.
 	 *
 	 * The function is expected to return an INTEGER. The function accepts following
 	 * parameters: 1. INTEGER_ARRAY arrival 2. INTEGER_ARRAY departure
 	 */
 
 	public static int countMeetings(List<Integer> firstDay, List<Integer> lastDay) {
-		int sizeFirstDay = firstDay.size();
-		int sizeLastDay = lastDay.size();
-
-		if (sizeFirstDay != sizeLastDay) {
-			return 0;
+		
+		Collections.sort(firstDay);
+		Collections.sort(lastDay);
+		
+		boolean [] agendaBool = new boolean[firstDay.size()];
+		
+		for (int i = 0; i < agendaBool.length; i++) {
+			System.out.println(agendaBool[i]);
 		}
-
-		// Constraint: 1 <= n <= 100000
-		if (sizeFirstDay <= 1 && sizeFirstDay > 100000) {
-			return 0;
-		}
-
-		// Constraint: 1 <= n <= 100000
-		if (sizeLastDay <= 1 && sizeLastDay > 100000) {
-			return 0;
-		}
-
-		// Constraint: 1 <= firstDay[i], lastDay[i] <= 100000 (where 0 <= i < n)
-		// Constraint: firstDay[i] <= lastDay[i] (where 0 <= i < n)
-
-		List<Schedules2> investidores = new ArrayList<Schedules2>();
-
+		
+		System.out.println("Adicionando registros na agenda...");
+		List<Agenda> agendaList = new ArrayList<Agenda>();
 		for (int i = 0; i < firstDay.size(); i++) {
-			investidores.add(new Schedules2(firstDay.get(i), lastDay.get(i)));
+			agendaList.add(new Agenda(firstDay.get(i), lastDay.get(i), firstDay.get(i) == lastDay.get(i)));
 		}
-
-		sortListInvestidores(investidores);
-
-		Set<Integer> agenda = new HashSet<Integer>();
-
-		List<Schedules2> investidoresAuxs = new ArrayList<Schedules2>(investidores);
-		for (int i = 0; i < investidoresAuxs.size(); i++) {
-			Schedules2 investidor = investidoresAuxs.get(i);
-
-			if (investidor.getBeginDay().equals(investidor.getEndDay())) {
-				agenda.add(investidor.getBeginDay());
-				investidores.remove(investidor);
+		
+		for (Agenda agenda : agendaList) {
+			System.out.println(agenda);
+		}
+		
+		agendaBool[0] = true;
+		
+		for (int i = 1; i < agendaList.size(); i++) {
+			Agenda previous = agendaList.get(i - 1);
+			Agenda actual = agendaList.get(i);
+			
+			if ((previous.isHasOneHour() && actual.isHasOneHour()) && (previous.getBegin() == actual.getBegin())) {
 				continue;
 			}
-
-			if (diaInicialJaOcupadoNaAgenda(agenda, investidor)) {
-				if (diaFinalJaOcupadoNaAgenda(agenda, investidor)) {
+			
+			if ((previous.isHasOneHour() && actual.isHasOneHour()) && (previous.getBegin() != actual.getBegin())) {
+				if (agendaBool[i] == false) {
+					agendaBool[i] = true;
 					continue;
-				} else {
-					agenda.add(investidor.getEndDay());
-					investidores.remove(investidor);
 				}
-			} else {
-				agenda.add(investidor.getBeginDay());
-				investidores.remove(investidor);
 			}
+			
+			if (!previous.isHasOneHour() && actual.isHasOneHour()) {
+				if (actual.getBegin() > previous.getEnd()) {
+					if (agendaBool[i] == false) {
+						agendaBool[i] = true;
+						continue;
+					}
+				}
+			}
+			
+			if (previous.isHasOneHour() && !actual.isHasOneHour()) {
+				if (actual.getBegin() >= previous.getEnd()) {
+					if (agendaBool[i] == false) {
+						agendaBool[i] = true;
+						continue;
+					}
+				}
+			}
+			
+			if (!previous.isHasOneHour() && !actual.isHasOneHour()) {
+				if (actual.getBegin() >= previous.getEnd()) {
+					if (agendaBool[i] == false) {
+						agendaBool[i] = true;
+						continue;
+					}
+				}
+			}
+			
+		}	
+		
+		int totalTrue = 0;
+		for (int i = 0; i < agendaBool.length; i++) {
+			System.out.println(agendaBool[i]);
+			if (agendaBool[i] == true) totalTrue++;
 		}
-
-		for (int i = 0; i < investidores.size(); i++) {
-			Schedules2 investidor = investidores.get(i);
-
-			if (diaInicialJaOcupadoNaAgenda(agenda, investidor)) {
-				if (diaFinalJaOcupadoNaAgenda(agenda, investidor)) {
-					continue;
-				} else {
-					agenda.add(investidor.getEndDay());
-				}
-			} else {
-				agenda.add(investidor.getBeginDay());
-			}
-		}
-
-		return agenda.size();
-	}
-
-	private static void sortListInvestidores(List<Schedules2> investidores) {
-		Collections.sort(investidores, new Comparator<Schedules2>() {
-			@Override
-			public int compare(Schedules2 o1, Schedules2 o2) {
-				Integer beginDay1 = o1.getBeginDay();
-				Integer beginDay2 = o2.getBeginDay();
-
-				int resultBeginDay = beginDay1 - beginDay2;
-
-				if (resultBeginDay != 0) {
-					return resultBeginDay;
-				}
-
-				Integer endDay1 = o1.getEndDay();
-				Integer endDay2 = o2.getEndDay();
-				return endDay1 - endDay2;
-			}
-		});
-	}
-
-	private static boolean diaInicialJaOcupadoNaAgenda(Set<Integer> agenda, Schedules2 investidor) {
-		return agenda.contains(investidor.getBeginDay());
-	}
-
-	private static boolean diaFinalJaOcupadoNaAgenda(Set<Integer> agenda, Schedules2 investidor) {
-		return agenda.contains(investidor.getEndDay());
+		
+		System.out.println("=======================");
+	
+		return totalTrue;
 	}
 
 }
 
-class Schedules2 implements Comparable<Schedules2> {
+class Agenda {
+	private Integer begin;
+	private Integer end;
+	private boolean hasOneHour;
 
-	private Integer beginDay;
-	private Integer endDay;
-
-	public Schedules2(Integer beginDay, Integer endDay) {
-		this.beginDay = beginDay;
-		this.endDay = endDay;
+	public Agenda(Integer begin, Integer end, boolean hasOneHour) {
+		super();
+		this.begin = begin;
+		this.end = end;
+		this.hasOneHour = hasOneHour;
 	}
 
-	public Integer getBeginDay() {
-		return beginDay;
+	public Integer getBegin() {
+		return begin;
 	}
 
-	public void setBeginDay(Integer beginDay) {
-		this.beginDay = beginDay;
+	public void setBegin(Integer begin) {
+		this.begin = begin;
 	}
 
-	public Integer getEndDay() {
-		return endDay;
+	public Integer getEnd() {
+		return end;
 	}
 
-	public void setEndDay(Integer endDay) {
-		this.endDay = endDay;
+	public void setEnd(Integer end) {
+		this.end = end;
+	}
+
+	public boolean isHasOneHour() {
+		return hasOneHour;
+	}
+
+	public void setHasOneHour(boolean hasOneHour) {
+		this.hasOneHour = hasOneHour;
+	}
+
+	@Override
+	public String toString() {
+		return "Schedules2 [begin=" + begin + ", end=" + end + ", hasOneHour=" + hasOneHour + "]";
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((beginDay == null) ? 0 : beginDay.hashCode());
-		result = prime * result + ((endDay == null) ? 0 : endDay.hashCode());
+		result = prime * result + ((begin == null) ? 0 : begin.hashCode());
+		result = prime * result + ((end == null) ? 0 : end.hashCode());
+		result = prime * result + (hasOneHour ? 1231 : 1237);
 		return result;
 	}
 
@@ -162,40 +158,22 @@ class Schedules2 implements Comparable<Schedules2> {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Schedules2 other = (Schedules2) obj;
-		if (beginDay == null) {
-			if (other.beginDay != null)
+		Agenda other = (Agenda) obj;
+		if (begin == null) {
+			if (other.begin != null)
 				return false;
-		} else if (!beginDay.equals(other.beginDay))
+		} else if (!begin.equals(other.begin))
 			return false;
-		if (endDay == null) {
-			if (other.endDay != null)
+		if (end == null) {
+			if (other.end != null)
 				return false;
-		} else if (!endDay.equals(other.endDay))
+		} else if (!end.equals(other.end))
+			return false;
+		if (hasOneHour != other.hasOneHour)
 			return false;
 		return true;
 	}
-
-	@Override
-	public String toString() {
-		return "Investor2 [beginDay=" + beginDay + ", endDay=" + endDay + "]";
-	}
-
-	@Override
-	public int compareTo(Schedules2 o) {
-		Integer beginDay1 = o.getBeginDay();
-		Integer beginDay2 = o.getBeginDay();
-
-		int resultBeginDay = beginDay1 - beginDay2;
-
-		if (resultBeginDay != 0) {
-			return resultBeginDay;
-		}
-
-		Integer endDay1 = o.getEndDay();
-		Integer endDay2 = o.getEndDay();
-		return endDay1 - endDay2;
-	}
+	
 }
 
 public class MeetupSchedule2 {
@@ -208,15 +186,14 @@ public class MeetupSchedule2 {
 		int resultado2 = CountMeetings2.countMeetings(Arrays.asList(1, 1, 2), Arrays.asList(1, 2, 2));
 		String result2 = resultado2 == 2 ? "Teste 2 PASSOU -> ;)" : "TESTE 2 FALHOU -> :(";
 		System.out.println(result2);
+//
+//		int resultado3 = CountMeetings2.countMeetings(Arrays.asList(1, 2, 1, 2, 2), Arrays.asList(3, 2, 1, 3, 3));
+//		String result3 = resultado3 == 3 ? "Teste 3 PASSOU -> ;)" : "TESTE 3 FALHOU -> :(";
+//		System.out.println(result3);
 
-		int resultado3 = CountMeetings2.countMeetings(Arrays.asList(1, 2, 1, 2, 2), Arrays.asList(3, 2, 1, 3, 3));
-		String result3 = resultado3 == 3 ? "Teste 3 PASSOU -> ;)" : "TESTE 3 FALHOU -> :(";
-		System.out.println(result3);
-
-		int resultado4 = CountMeetings2.countMeetings(Arrays.asList(1, 10, 11), Arrays.asList(11, 10, 11));
-		String result4 = resultado4 == 3 ? "Teste 4 PASSOU -> ;)" : "TESTE 4 FALHOU -> :(";
-		System.out.println(result4);
-		
+//		int resultado4 = CountMeetings2.countMeetings(Arrays.asList(1, 10, 11), Arrays.asList(11, 10, 11));
+//		String result4 = resultado4 == 3 ? "Teste 4 PASSOU -> ;)" : "TESTE 4 FALHOU -> :(";
+//		System.out.println(result4);
 
 		List<Integer> diaInicial = Arrays.asList(43862, 2403, 10323, 66772, 64109, 17862, 93881, 22542, 79323, 6520,
 				68034, 54504, 73894, 89711, 63331, 75543, 76061, 60853, 21518, 89656, 11158, 37357, 33719, 80260, 33075,
@@ -355,9 +332,9 @@ public class MeetupSchedule2 {
 				99054, 57921, 96162, 94500, 71810, 20213, 97172, 89154, 97847, 56415, 96523, 95250, 42393, 69261,
 				91225);
 
-		int resultado5 = CountMeetings2.countMeetings(diaInicial, diaFinal);
-		String result5 = resultado5 == 1000 ? "Teste 5 PASSOU -> ;)" : "TESTE 5 FALHOU -> :(";
-		System.out.println(result5);
+//		int resultado5 = CountMeetings2.countMeetings(diaInicial, diaFinal);
+//		String result5 = resultado5 == 1000 ? "Teste 5 PASSOU -> ;)" : "TESTE 5 FALHOU -> :(";
+//		System.out.println(result5);
 
 	}
 }

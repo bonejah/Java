@@ -12,6 +12,8 @@ public class Pilha {
 		livros.push("Dom Quixote");
 		livros.push("O Hobbit");
 		
+		System.out.println(livros);
+		
 		System.out.println(livros.peek());
 		System.out.println(livros.element());
 		

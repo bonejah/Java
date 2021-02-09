@@ -14,7 +14,7 @@ public class Logicos {
 //		System.out.println(!condicao2); // true
 //		System.out.println(" ===================== ");
 		
-		System.out.println("Tabela verdade E (AND");
+		System.out.println("Tabela verdade E (AND)");
 		System.out.println(true && true);
 		System.out.println(true && false);
 		System.out.println(false && true);

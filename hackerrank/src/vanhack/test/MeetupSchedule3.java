@@ -101,13 +101,13 @@ public class MeetupSchedule3 {
 		String result2 = resultado2 == 2 ? "Teste 2 PASSOU -> ;)" : "TESTE 2 FALHOU -> :(";
 		System.out.println(result2);
 
-//		int resultado3 = CountMeetings3.countMeetings(Arrays.asList(1, 2, 1, 2, 2), Arrays.asList(3, 2, 1, 3, 3));
-//		String result3 = resultado3 == 3 ? "Teste 3 PASSOU -> ;)" : "TESTE 3 FALHOU -> :(";
-//		System.out.println(result3);
-//
-//		int resultado4 = CountMeetings3.countMeetings(Arrays.asList(1, 10, 11), Arrays.asList(11, 10, 11));
-//		String result4 = resultado4 == 3 ? "Teste 4 PASSOU -> ;)" : "TESTE 4 FALHOU -> :(";
-//		System.out.println(result4);
+		int resultado3 = CountMeetings3.countMeetings(Arrays.asList(1, 2, 1, 2, 2), Arrays.asList(3, 2, 1, 3, 3));
+		String result3 = resultado3 == 3 ? "Teste 3 PASSOU -> ;)" : "TESTE 3 FALHOU -> :(";
+		System.out.println(result3);
+
+		int resultado4 = CountMeetings3.countMeetings(Arrays.asList(1, 10, 11), Arrays.asList(11, 10, 11));
+		String result4 = resultado4 == 3 ? "Teste 4 PASSOU -> ;)" : "TESTE 4 FALHOU -> :(";
+		System.out.println(result4);
 
 		List<Integer> diaInicial = Arrays.asList(43862, 2403, 10323, 66772, 64109, 17862, 93881, 22542, 79323, 6520,
 				68034, 54504, 73894, 89711, 63331, 75543, 76061, 60853, 21518, 89656, 11158, 37357, 33719, 80260, 33075,
@@ -246,9 +246,9 @@ public class MeetupSchedule3 {
 				99054, 57921, 96162, 94500, 71810, 20213, 97172, 89154, 97847, 56415, 96523, 95250, 42393, 69261,
 				91225);
 
-//		int resultado5 = CountMeetings3.countMeetings(diaInicial, diaFinal);
-//		String result5 = resultado5 == 1000 ? "Teste 5sa PASSOU -> ;)" : "TESTE 5 FALHOU -> :(";
-//		System.out.println(result5);
+		int resultado5 = CountMeetings3.countMeetings(diaInicial, diaFinal);
+		String result5 = resultado5 == 1000 ? "Teste 5sa PASSOU -> ;)" : "TESTE 5 FALHOU -> :(";
+		System.out.println(result5);
 
 	}
 }
