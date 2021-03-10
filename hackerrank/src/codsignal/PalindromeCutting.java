@@ -2,6 +2,8 @@ package codsignal;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Arrays;
+
 import org.junit.jupiter.api.Test;
 
 /**
@@ -99,18 +101,39 @@ public class PalindromeCutting {
 	}
 
 	public String palindromeCutting(String s) {
-		if (s.equals("") || s.length() == 1) return s;
-		
-		
+
+		if (s.equals("") || s.length() == 1)
+			return s;
+
 		// aaacodedoc
 		char[] charArray = s.toCharArray();
-		for(int i = 0; i < charArray.length; i++) {
-			System.out.println(charArray[i]);
+		char[] arrays = new char[charArray.length];
+		
+		for (int i = 0; i < arrays.length; i++) {
+			System.out.print(arrays[i] + ", ");
 		}
 		
-		String newS = s.substring(0, 3);
-		System.out.println(newS);
-		
+		System.out.println();
+
+
+		for (int i = 0; i < charArray.length; i++) {
+
+			for (int j = i; j <= charArray.length; j++) {
+//				aaacodedoc
+//				System.out.println("charArray[i] == charArray[i + 1] => " + (charArray[i] == charArray[j]));
+
+				if (charArray[i] == charArray[j]) {
+					arrays[i] = charArray[i];
+					System.out.println("arrayS[i] = " + arrays[i]);
+				}
+			}
+
+		}
+
+		for (int i = 0; i < arrays.length; i++) {
+			System.out.print(arrays[i] + ", ");
+		}
+
 		return null;
 	}
 

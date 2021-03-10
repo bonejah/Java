@@ -14,7 +14,7 @@ docker-machine ip: find ip:
 docker prune: remove volume
 
 Docker compose
-docker-machine ip: up all services
+docker-machine up: up all services
 
 ------------------------------------------------------------------------------
 Installing Postgres

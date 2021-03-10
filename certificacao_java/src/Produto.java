@@ -1,6 +1,0 @@
-
-class Produto {
-
-	String nomeProduto;
-	
-}
